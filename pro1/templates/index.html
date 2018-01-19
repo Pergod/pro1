@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}首页 welcome-{{ current_user.name }}{% endblock %}
+{% block css %}/static/styles/pages/index.css{% endblock%}
+{% block content %}
+<div class="page-main clearfix">
+    <div class="main" id="content">
+        {% for image in images %}
+            <article class="mod">
+                <header class="mod-hd">
+                    {% if current_user.is_authenticated and current_user.role=='1' %}
+                        <a class="icon-remove" href="/delete/{{image.id}}/"/>
+                    {% endif%}
+                    <time class="time">{{ image.create_time }}</time>
+                    <a href="/profile/{{ image.user.id }}" class="avatar">
+                        <img src="{{ image.user.head_url}}">
+                    </a>
+                    <div class="profile-info">
+                        <a title="蘑菇喵" href="/profile/{{ image.user.id }}">{{ image.user.name }}</a>
+                    </div>
+                </header>
+                <div class="mod-bd">
+                    <div class="img-box">
+                        <img src="{{ image.url }}">
+                    </div>
+                </div>
+                <div class="mod-ft">
+                    <ul class="discuss-list" id="discuss-list{{image.id}}">
+                        <li class="more-discuss" id="more-discuss{{image.id}}">
+                            <a>
+                                <span>全部 </span><span id="comment_count{{image.id}}">{{image.comments|length}}</span>
+                                <span> 条评论</span></a>
+                        </li>
+                       {% for comment in image.comments: %}
+                            {% if loop.index > 2 %} {% break %} {% endif %}
+                            <li>
+                                <a class="_4zhc5 _iqaka" title="zjuyxy" href="/profile/{{comment.user_id}}" data-reactid=".0.1.0.0.0.2.1.2:$comment-17856951190001917.1">{{comment.user.name}}</a>
+                                <span>
+                                    <span>{{comment.content}}</span>
+                                </span>
+                            </li>
+                       {%endfor%}
+                    </ul>
+                   <section class="discuss-edit">
+                        <a class="icon-heart-empty" id="jsIco"></a>
+                        <input placeholder="添加评论..." id="jsCmt{{image.id}}" type="text">
+                        <button class="more-info" id="jsSubmit" onclick="submitComment({{image.id}});">更多选项</button>
+                    </section>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+    {% if has_next %}
+    <div class="more-content js-load-more">
+        <a class="_oidfu" href="javascript:void(0);">更多</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    window.uid = 1;
+</script>
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/submit.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+{% endblock%}
+
+
